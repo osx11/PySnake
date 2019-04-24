@@ -12,9 +12,9 @@ coordinates = {
     4: (1, 2),
 }
 
-# поле 6х6
-y = 6
-x = 6
+# поле 20x20
+y = 20
+x = 20
 
 # направление змейки
 direction = 'up'  # пусть по уполчанию двигается вверх
@@ -79,6 +79,8 @@ def move_right():
     if direction != 'left':
         current_head_position = coordinates[0]
         new_head_position = (coordinates[0][0] + 1, coordinates[0][1])
+        if field_edge(new_head_position):
+            new_head_position = (0, coordinates[0][1])
         if collision(new_head_position):  # т.к. мы уже записали новую координату головы, берем прямо оттуда
             print('Game over epta.')
             exit(0)
@@ -95,6 +97,10 @@ def collision(new_head_position):  # возвращает True, если коо�
             print(f'координата {coordinate} равна голове змейки {new_head_position}')
             return True
     return False
+
+
+def field_edge(new_head_position):  # возвращает True, если координата головы по x или y равна границам поля
+    return True if new_head_position[0] > x or new_head_position[0] < 0 or new_head_position[1] > y or new_head_position[1] < 0 else False
 
 
 keyboard.add_hotkey('Ctrl + Up', move_up)
