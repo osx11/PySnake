@@ -1,18 +1,16 @@
-# https://hastebin.com/inorojuruy.py
-
 import keyboard
 import tkinter as tk
 from time import sleep
-import threading
+from threading import Thread
+from random import randint
 
 from src import snake_logic as sl
 from src import gridder
+from src import consts
 
-NAME = 'PySnake'
-WIDTH = 600
-HEIGHT = 600
-
-grid_coordinates = gridder.create_grid(canvas_height=HEIGHT, grid_width=29, grid_height=29)
+grid_coordinates = gridder.create_grid(canvas_height=consts.CANVAS_HEIGHT, grid_width=consts.GRID_WIDTH, grid_height=consts.GRID_HEIGHT)
+# apple_coordinates = None
+# score = 0
 
 
 def update_grid():
@@ -30,6 +28,10 @@ def continue_moving():
             move_left()
         elif sl.direction == 'right':
             move_right()
+
+        if sl.eats_apple():
+            draw_apple()
+            label_score.configure(text=f'Score: {sl.score}')
         sleep(0.5)
 
 
@@ -57,14 +59,16 @@ def move_right():
     update_grid()
 
 
+def draw_apple():
+    canvas.create_rectangle(grid_coordinates[sl.apple_coordinates], fill='#00ff00')
+
+
 def start():
-    for i in range(3, -1, -1):
-        print(f'Starting in {i}...')
-        sleep(1)
-    threading.Thread(target=continue_moving, daemon=True).start()
+    sl.generate_apple()
+    draw_apple()
+    Thread(target=continue_moving, daemon=True).start()
 
 
-# keyboard.add_hotkey('Ctrl + Alt', start)
 keyboard.add_hotkey('Up', move_up)
 keyboard.add_hotkey('Down', move_down)
 keyboard.add_hotkey('Left', move_left)
@@ -73,9 +77,12 @@ keyboard.add_hotkey('Right', move_right)
 
 if __name__ == '__main__':
     root = tk.Tk()
-    canvas = tk.Canvas(root, height=HEIGHT, width=WIDTH)
-    root.title(NAME)
+    canvas = tk.Canvas(root, height=consts.CANVAS_HEIGHT, width=consts.CANVAS_WIDTH)
+    root.title(consts.NAME)
     root.resizable(False, False)
+
+    label_score = tk.Label(text='Score: 0', bg='#24252A', fg='#ffffff')
+    label_score.pack()
 
     for coordinate in grid_coordinates.values():
         canvas.create_rectangle(coordinate, fill='#ffffff')

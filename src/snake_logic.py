@@ -1,5 +1,5 @@
-import keyboard
-from time import sleep
+from random import randint
+from src import consts
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -15,15 +15,12 @@ snake_coordinates = {
     7: (1, 2),
 }
 
-# размеры поля
-edge_y = 28
-edge_x = 28
-
 # направление змейки
 direction = 'right'  # пусть по уполчанию двигается вверх
 
 tail_coordinates = snake_coordinates[len(snake_coordinates) - 1]
-
+apple_coordinates = None
+score = 0
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -59,7 +56,7 @@ def move_down():
         current_head_position = snake_coordinates[0]
         new_head_position = (snake_coordinates[0][0], snake_coordinates[0][1] - 1)
         if field_edge(new_head_position):
-            new_head_position = (snake_coordinates[0][0], edge_y)
+            new_head_position = (snake_coordinates[0][0], consts.GRID_HEIGHT-1)
         if collision(new_head_position):  # т.к. мы уже записали новую координату головы, берем прямо оттуда
             print('Game over epta.')
             exit(0)
@@ -76,7 +73,7 @@ def move_left():
         current_head_position = snake_coordinates[0]
         new_head_position = (snake_coordinates[0][0] - 1, snake_coordinates[0][1])
         if field_edge(new_head_position):
-            new_head_position = (edge_x, snake_coordinates[0][1])
+            new_head_position = (consts.GRID_WIDTH-1, snake_coordinates[0][1])
         if collision(new_head_position):  # т.к. мы уже записали новую координату головы, берем прямо оттуда
             print('Game over epta.')
             exit(0)
@@ -111,11 +108,17 @@ def collision(new_head_position):  # возвращает True, если коо�
 
 
 def field_edge(new_head_position):  # возвращает True, если координата головы по x или y равна границам поля
-    return True if new_head_position[0] > edge_x or new_head_position[0] < 0 or new_head_position[1] > edge_y or new_head_position[1] < 0 else False
+    return True if new_head_position[0] > consts.GRID_WIDTH-1 or new_head_position[0] < 0 or new_head_position[1] > consts.GRID_HEIGHT-1 or new_head_position[1] < 0 else False
 
 
-# keyboard.add_hotkey('Ctrl + Up', move_up)
-# keyboard.add_hotkey('Ctrl + Down', move_down)
-# keyboard.add_hotkey('Ctrl + Left', move_left)
-# keyboard.add_hotkey('Ctrl + Right', move_right)
-# keyboard.wait('Ctrl + Q')
+def generate_apple():
+    global apple_coordinates
+    apple_coordinates = randint(0, consts.GRID_HEIGHT), randint(0, consts.GRID_HEIGHT)
+
+
+def eats_apple():
+    global score
+    if snake_coordinates[0] == apple_coordinates:
+        score += 1
+        generate_apple()
+        return True
