@@ -1,18 +1,15 @@
 from random import randint
-from src import consts
+
+import consts
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
+start_coordinates = randint(0, consts.GRID_HEIGHT - 1), randint(0, consts.GRID_HEIGHT - 1)
+
 # координаты епта
 snake_coordinates = {
-    0: (8, 2),
-    1: (7, 2),
-    2: (6, 2),
-    3: (5, 2),
-    4: (4, 2),
-    5: (3, 2),
-    6: (2, 2),
-    7: (1, 2),
+    0: start_coordinates,
+    1: (start_coordinates[0]-1, start_coordinates[1]),
 }
 
 # направление змейки
@@ -113,12 +110,13 @@ def field_edge(new_head_position):  # возвращает True, если коо
 
 def generate_apple():
     global apple_coordinates
-    apple_coordinates = randint(0, consts.GRID_HEIGHT), randint(0, consts.GRID_HEIGHT)
+    apple_coordinates = randint(0, consts.GRID_HEIGHT-1), randint(0, consts.GRID_HEIGHT-1)
 
 
 def eats_apple():
     global score
     if snake_coordinates[0] == apple_coordinates:
+        snake_coordinates[len(snake_coordinates)] = tail_coordinates[0] + 1, tail_coordinates[1]
         score += 1
         generate_apple()
         return True

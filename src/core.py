@@ -4,13 +4,11 @@ from time import sleep
 from threading import Thread
 from random import randint
 
-from src import snake_logic as sl
-from src import gridder
-from src import consts
+import snake_logic as sl
+import gridder
+import consts
 
 grid_coordinates = gridder.create_grid(canvas_height=consts.CANVAS_HEIGHT, grid_width=consts.GRID_WIDTH, grid_height=consts.GRID_HEIGHT)
-# apple_coordinates = None
-# score = 0
 
 
 def update_grid():
@@ -32,7 +30,8 @@ def continue_moving():
         if sl.eats_apple():
             draw_apple()
             label_score.configure(text=f'Score: {sl.score}')
-        sleep(0.5)
+            snake_size_label.configure(text=f'Size: {len(sl.snake_coordinates)}')
+        sleep(consts.DELAY)
 
 
 def move_up():
@@ -83,6 +82,9 @@ if __name__ == '__main__':
 
     label_score = tk.Label(text='Score: 0', bg='#24252A', fg='#ffffff')
     label_score.pack()
+
+    snake_size_label = tk.Label(text=f'Size: {len(sl.snake_coordinates)}', bg='#24252A', fg='#ffffff')
+    snake_size_label.pack()
 
     for coordinate in grid_coordinates.values():
         canvas.create_rectangle(coordinate, fill='#ffffff')
