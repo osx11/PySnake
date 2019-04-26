@@ -9,7 +9,7 @@ start_coordinates = randint(0, consts.GRID_HEIGHT - 1), randint(0, consts.GRID_H
 # координаты епта
 snake_coordinates = {
     0: start_coordinates,
-    1: (start_coordinates[0]-1, start_coordinates[1]),
+    # 1: (start_coordinates[0]-1, start_coordinates[1]),
 }
 
 # направление змейки
@@ -23,10 +23,13 @@ score = 0
 
 
 def move_after_head(current_head_position):
-    for i in range(len(snake_coordinates) - 1, -1, -1):
+    snake_len = len(snake_coordinates)
+    for i in range(snake_len - 1, -1, -1):
         if i != 0:
+            pass
             snake_coordinates[i] = snake_coordinates[i - 1]
-    snake_coordinates[1] = current_head_position
+    if snake_len > 1:
+        snake_coordinates[1] = current_head_position
 
 
 def move_up():
