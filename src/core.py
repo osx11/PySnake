@@ -12,10 +12,8 @@ grid_coordinates = gridder.create_grid(canvas_height=consts.CANVAS_HEIGHT, grid_
 
 
 def update_grid():
-    for i in range(len(sl.snake_coordinates)):
-        canvas.create_rectangle(grid_coordinates[sl.snake_coordinates[i]], fill='#0000ff') if i == 0 else canvas.create_rectangle(grid_coordinates[sl.snake_coordinates[i]], fill='#ff0000')
-    # for l_coordinate in sl.snake_coordinates.values():
-    #     canvas.create_rectangle(grid_coordinates[l_coordinate], fill='#ff0000')
+    for l_coordinate in sl.snake_coordinates.values():
+        canvas.create_rectangle(grid_coordinates[l_coordinate], fill='#ff0000')
     if sl.apple_coordinates:
         draw_apple()
 
